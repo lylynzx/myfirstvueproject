@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-<div></div>
+<div>this is the profile page</div>
 </template>
 
 <script>

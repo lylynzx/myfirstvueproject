@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-import category from '~views/category'
-import cart from '~views/cart'
-import profile from '~views/profile'
+import Home from '@/views/Home.vue'
+import category from '@/views/category.vue'
+import cart from '@/views/cart.vue'
+import profile from '@/views/profile.vue'
 
 
 

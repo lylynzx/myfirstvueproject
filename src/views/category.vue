@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-<div></div>
+<div>this is the category page</div>
 </template>
 
 <script>

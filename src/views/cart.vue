@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-<div></div>
+<div>this is the cart page</div>
 </template>
 
 <script>
