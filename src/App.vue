@@ -1,32 +1,38 @@
+<!--  -->
 <template>
-  <div id="app">
-    <div id="nav">
-      <!-- <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> -->
-    </div>
-    <router-view/>
-  </div>
+<div>
+  <!-- <p>嘿嘿嘿 这是app.vue中的内容</p>  -->
+<router-view/>
+<tabbar></tabbar>
+</div>
+
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+import tabbar from '@/components/tabbar';
+export default {
+data() {
+return {
+
 }
 
-#nav {
-  padding: 30px;
-}
+},
+components: {
+  tabbar,
+},
+//生命周期 - 创建完成（访问当前this实例）
+created() {
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+},
+//生命周期 - 挂载完成（访问DOM元素）
+mounted() {
 
-#nav a.router-link-exact-active {
-  color: #42b983;
 }
+}
+</script>
+<style scoped>
+/* @import url(); 引入css类 */
+@import './assets/css/normalize.css';
+@import './assets/css/base.css';
+
 </style>
