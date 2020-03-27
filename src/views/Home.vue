@@ -34,7 +34,7 @@
 import "mint-ui/lib/style.css";
 //这里引用了mint-ui的css文件 因为该组件的css进行了私有化：scoped
 import navbar from "@/components/navbar";
-import { getHomeMultidata } from "@/network/home";
+import { getHomeMultidata, getHomeGoods } from "@/network/home";
 export default {
   name: "Home",
   components: {
@@ -48,12 +48,23 @@ export default {
       //猜测原因为homedata数据是created中通过axios获取得到，为异步操作，因此
     };
   },
+  methods: {
+    getHomeMultidata() {
+      getHomeMultidata().then(data => {
+        this.homedata = data;
+        console.log("got data");
+        console.log(this.homedata);
+      });
+    },
+    getHomeGoods(type, page) {
+      getHomeGoods(type, page + 1).then(data => {
+        console.log(data);
+      });
+    }
+  },
   created() {
-    getHomeMultidata().then(data => {
-      this.homedata = data;
-      console.log("got data");
-      console.log(this.homedata);
-    });
+    this.getHomeMultidata();
+    this.getHomeGoods("sell", 1);
   }
 };
 </script>
@@ -79,7 +90,7 @@ export default {
 .mint-swipe-item img {
   width: 100%;
   height: 100%;
-  object-fit: cover; 
+  object-fit: cover;
 }
 .navbar {
   font-size: 14px;
@@ -93,7 +104,6 @@ navbar {
   margin-top: 15px;
   height: 5.5rem;
   width: 100%;
-  
 }
 .recommend ul {
   font-size: 14px;
