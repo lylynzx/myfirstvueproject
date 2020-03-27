@@ -49,15 +49,16 @@ export default {
 }
 .tabbaritem p {
   margin: 0;
+  font-size: 0.8rem;
 }
 .icon {
-  margin-top: 0.2em;
-  width: 1em;
-  height: 1em;
-  vertical-align: -0.15em;
+  margin-top: 0.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  vertical-align: -0.15rem;
   fill: currentColor;
   overflow: hidden;
-  font-size: 1.5em;
+  
 }
 
 .activeitem {

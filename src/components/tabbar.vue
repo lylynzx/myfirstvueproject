@@ -43,7 +43,7 @@ export default {
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 49px;
+  height: 2.45rem;
   /* background-color: orange; */
   box-shadow: 0px -1px 1px rgba(100, 100, 100, 0.1);
 }

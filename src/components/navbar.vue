@@ -30,13 +30,14 @@ mounted() {
     position: fixed;
     left: 0;
     top: 0;
+    z-index: 999;
     width: 100%;
     height: 44px;
     line-height: 44px;
     /* font-size: 30px; */
     /* background-color: orange; */
     box-shadow: 0px 1px 1px rgba(100, 100, 100, .1);
-    /* background-color: white; */
+    background-color: white;
     
     
 }
