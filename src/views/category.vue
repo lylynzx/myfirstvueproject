@@ -13,8 +13,8 @@
 </template>
 
 <script>
-import { request } from "@/network/request.js";
-import navbar from "@/components/navbar";
+import { request } from "components/../network/request.js";
+import navbar from "components/navbar";
 export default {
   data() {
     return {
@@ -23,9 +23,10 @@ export default {
   },
   methods: {
     sendrequest() {
-      request({ url: "/home/multidata" }).then(data => {
-        return (this.content = data);
-      });
+      // request({ url: "/home/multidata" }).then(data => {
+      //   return (this.content = data);
+      // });
+      this.content = this.$store.state.home.recommendData;
     }
   },
   components: {
