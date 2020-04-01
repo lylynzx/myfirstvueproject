@@ -15,17 +15,26 @@
 //     }
 // }
 
-module.exports={
-    configureWebpack:{
-        resolve:{
-            extensions:[],
-            alias:{
-                //'@':'/src',
-                'assets':'@/assets,',
-                'components':'@/components',
-                'network':resolve('@/network')
-            }
-        }
-    }
+const path = require("path");
+function resolve(dir) {
+    return path.join(__dirname, dir);
 }
-//!!注意 该页面配置未生效，待后期解决  目前已知@ components 等路径可直接使用，但并非应为此文件
+module.exports = {
+    lintOnSave: true,
+    // 生产环境是否生成 sourceMap 文件
+    productionSourceMap: false,
+    // 开启 CSS source maps?
+    css: {
+        sourceMap: false,
+    },
+    chainWebpack: config => {
+        config.resolve.alias
+            .set("@", resolve("src"))
+            .set("utils", resolve("src/utils"))
+            .set('components', resolve('/src/components'))
+            .set('views', resolve('/src/views'))
+            .set('assets', resolve('/src/assets'))
+            .set('network', resolve('@/network'))
+    }
+};
+//!!注意 该页面配置未生效，待后期解决  目前已知@ components 等路径可直接使用，但并非因为此文件

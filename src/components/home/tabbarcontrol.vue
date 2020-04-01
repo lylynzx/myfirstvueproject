@@ -5,9 +5,9 @@
     <div
       class="recommenditem"
       v-for="item in recommendData[recommendData.activeItem].list"
-      :key="item.title"
+      :key="item.iid"
     >
-      <img :src="item.show.img" alt />
+      <img :src="item.show.img" @load="imgload" />
       <p>{{item.title}} {{item.price}}</p>
     </div>
   </div>
@@ -17,7 +17,9 @@
 import tabControl from "components/tabcontrol";
 export default {
   data() {
-    return {};
+    return {
+      timer:"",
+    };
   },
   props: {
     recommendTitles: {
@@ -26,6 +28,14 @@ export default {
     recommendData: {
       type: Object,
       default: {}
+    }
+  },
+  methods:{
+    imgload(){
+      clearTimeout(this.timer);
+      this.timer = setTimeout(()=>{
+        this.$bus.$emit('refresh');
+      },200)
     }
   },
   components: {
@@ -43,25 +53,27 @@ export default {
 </script>
 <style scoped>
 .mytabcontrol {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
   margin-top: 20px;
   background-color: #fff;
 }
 .recommenditem {
-  float: left;
   margin-top: 20px;
   width: 48%;
   height: 15rem;
   font-size: 0.5rem;
   overflow: hidden;
 }
-.recommenditem:nth-child(2n) {
-  float: left;
+/* .recommenditem:nth-child(2n) {
+  
   margin-left: 5px;
 }
 .recommenditem:nth-child(2n + 1) {
   float: right;
   margin-right: 5px;
-}
+} */
 .recommenditem img {
   width: 100%;
   border-radius: 10px 10px 10px 10px;

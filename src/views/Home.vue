@@ -4,20 +4,31 @@
       <navbar>
         <p slot="center">vue商城项目</p>
       </navbar>
+      <div class="tab-controlori" ref="mytabcontrolbackup"><tab-controlori :titles="recommendTitles"></tab-controlori></div>
+      
+      <back-top class="homeBackTop" ref="mybacktop" @click.native="backTopClick" />
     </div>
-
-    <div class="content">
-      <!-- <img alt="Vue logo" src="../assets/logo.png" />
-      <h2>this is the home page</h2>-->
-      <swiperSection :homedata="homedata" />
-      <recommend :homedata="homedata" />
-      <tab-control
-        :recommendTitles="recommendTitles"
-        :recommendData="$store.state.home.recommendData"
-      />
-      <!-- 这里将vuex中的recommendData作为参数传入，也可不传入，由子组件自行获取 -->
-      <!-- <button @click="btnclick">点击显示推荐列表数据</button> -->
-    </div>
+    <better-scroll
+      :probeType="3"
+      class="myhomescroll"
+      @scrolling="myscroll"
+      ref="myhomescroll"
+      :pullUpLoad="true"
+      @pullUpLoad="pullUpLoad"
+    >
+      <div class="homecontent">
+        <!-- <img alt="Vue logo" src="../assets/logo.png" />
+        <h2>this is the home page</h2>-->
+        <swiperSection :homedata="homedata" />
+        <recommend :homedata="homedata" />
+        <tab-control
+          :recommendTitles="recommendTitles"
+          :recommendData="$store.state.home.recommendData"
+        />
+        <!-- 这里将vuex中的recommendData作为参数传入，也可不传入，由子组件自行获取 -->
+        <!-- <button @click="btnclick">点击显示推荐列表数据</button> -->
+      </div>
+    </better-scroll>
   </div>
 </template>
 
@@ -26,10 +37,13 @@
 // import HelloWorld from '@/components/HelloWorld.vue'
 import { mapState } from "vuex";
 
+import betterScroll from "components/better-scroll";
 import navbar from "components/navbar";
+import backTop from "components/back-top";
 import swiperSection from "components/home/swipe";
 import recommend from "components/home/recommend";
 import TabControl from "components/home/tabbarcontrol";
+import tabControlori from "components/tabcontrol";
 import { getHomeMultidata, getHomeGoods } from "@/network/home.js";
 
 export default {
@@ -37,7 +51,9 @@ export default {
   components: {
     // HelloWorld
     navbar,
-
+    betterScroll,
+    backTop,
+    tabControlori,
     swiperSection,
     recommend,
     TabControl
@@ -74,6 +90,45 @@ export default {
         // console.log("got data");
         // console.log(this.homedata);
       });
+    },
+    myscroll(res) {
+      //console.log(res);
+      if (res.y < -1000) {
+        //console.log(this.$refs.mybacktop.$el);
+        this.$refs.mybacktop.$el.classList.add("active");
+
+        // console.log('display');
+      } else {
+        this.$refs.mybacktop.$el.classList.remove("active");
+      }
+      if(res.y < -575) {
+        this.$refs.mytabcontrolbackup.classList.add("active")
+      }else{
+        this.$refs.mytabcontrolbackup.classList.remove("active")
+      }
+    },
+    backTopClick() {
+      //console.log('back top clicked');
+      this.$refs.myhomescroll.scrollTo(0, 0, 500);
+    },
+    pullUpLoad() {
+      let obj = {};
+      obj.type = this.$store.state.home.recommendData.activeItem;
+      obj.page = this.$store.state.home.recommendData[
+        this.$store.state.home.recommendData.activeItem
+      ].page;
+      console.log(
+        this.$store.state.home.recommendData[
+          this.$store.state.home.recommendData.activeItem
+        ].page
+      );
+
+      this.$store.dispatch("pulltoUpdate", obj);
+      setTimeout(() => {
+        this.$refs.myhomescroll.finishPullUp();
+        this.$refs.myhomescroll.refresh();
+        console.log("loading finish ready to refresh the bscroll");
+      }, 500);
     }
     // getHomeGoods(type, page) {
     //   getHomeGoods(type, page + 1).then(data => {
@@ -87,7 +142,20 @@ export default {
     // this.recommendData = this.$store.home.recommendData
     //console.log(this.recommendData);
     //console.log(this.recommendTitles);
-    this.$store.dispatch("updateRecommendData", { type: "sell", page: 0 });
+    // console.log(this.$store.state.home.recommendData);
+
+    if (
+      this.$store.state.home.recommendData[
+        this.$store.state.home.recommendData.activeItem
+      ].page == 0
+    ) {
+      // console.log(123111);
+
+      this.$store.dispatch("updateRecommendData", { type: "sell", page: 0 });
+    } else {
+      console.log("切换页面 我不再请求啦");
+    }
+    //这里在切换页面时出现bug 因为vuex中的数据保存好后重复生成该组件导致初始数据重复 。这里用if判断page来做解决 根本解决方法为keep-alive让组件不被销毁即可
     //这里用于设置初次载入页面时需要获取的数据，默认为sell 若要修改 需要同时修改1. 此处   2.tabcontrol处  3.vuex的对应recommendData处
     this.getHomeMultidata();
     // this.getHomeGoods(
@@ -95,22 +163,55 @@ export default {
     //   // this.recommendData[this.recommendData.activeItem].page
 
     // );
+  },
+  mounted(){
+    this.$bus.$on('refresh', ()=>{
+      console.log(11111);
+      this.$refs.myhomescroll.refresh();
+    })
+    // this.$bus.$on('itemclick',(res) => {
+    //   console.log('ready to change annother activeindex');
+    //   console.log('res=' +res);
+      
+    //   this.$refs.mytabcontrolbackup1.$refs.roottabcontrol.activeIndex = res;
+    //   this.$refs.mytabcontrolbackup.activeIndex = res;
+    // })
   }
 };
 </script>
 
 
 <style scoped>
-.content {
-  background-color: #eee;
+.homecontent {
+  background-color: #fafbfc;
   margin-top: 44px;
 }
-
+.myhomescroll {
+  height: calc(100vh - 44px - 2.45rem);
+}
+.homeBackTop {
+  position: fixed;
+  bottom: 4rem;
+  right: 1rem;
+  z-index: 999;
+}
 .navbar {
   font-size: 14px;
   background-color: orange;
 }
 navbar {
   background-color: orange;
+}
+.tab-controlori {
+  display: none;
+  position: fixed;
+  top: 43px;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  font-size: 1rem;
+}
+.active {
+  display: block;
 }
 </style>
