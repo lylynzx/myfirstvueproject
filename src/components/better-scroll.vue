@@ -42,13 +42,13 @@ export default {
     scrollTo(x,y,time){
         //console.log('触发了bs组件的scrollto方法');
         
-        this.bScroll.scrollTo(x,y,time);
+        this.bScroll && this.bScroll.scrollTo(x,y,time);
     },
     finishPullUp(){
-        this.bScroll.finishPullUp();
+        this.bScroll && this.bScroll.finishPullUp();
     },
     refresh(){
-        this.bScroll.refresh();
+        this.bScroll && this.bScroll.refresh();
     }
   },
   //生命周期 - 创建完成（访问当前this实例）
@@ -56,8 +56,8 @@ export default {
   //生命周期 - 挂载完成（访问DOM元素）
   mounted() {
     this.initScroll();
-    this.bScroll.on('scroll', res => {
-        console.log(res);
+    this.bScroll && this.bScroll.on('scroll', res => {
+        //console.log(res);
         this.$emit('scrolling',res);
     })//拿到创建的bscroll对象进行on方法监听scroll事件
     // console.log(this.bScroll);

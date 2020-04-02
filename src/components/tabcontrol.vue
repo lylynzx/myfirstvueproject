@@ -29,8 +29,8 @@ export default {
   },
   methods: {
     itemClick(data) {
-      console.log(data);
-      console.log(this.titles[data]);
+      //console.log(data);
+      //console.log(this.titles[data]);
       this.$store.dispatch("updateRecommendData", this.titles[data]);
       //this.activeIndex = data;
       this.$store.commit('changeIndex',data)

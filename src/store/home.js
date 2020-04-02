@@ -8,7 +8,8 @@ export default {
             new: { page: 0, list: [] },
             pop: { page: 0, list: [] }
         },
-        activeIndex:0
+        activeIndex:0,
+        scrollY:0
     },
     getters: {
         getActiveRecommend: state => state.recommendData[state.recommendData.activeItem].list
@@ -72,6 +73,9 @@ export default {
         },
         changeIndex: (state,data) =>{
             state.activeIndex = data
+        },
+        changeScrollY: (state,data) =>{
+            state.scrollY = data
         }
     },
     modules: {

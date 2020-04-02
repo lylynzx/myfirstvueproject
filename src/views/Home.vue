@@ -63,11 +63,12 @@ export default {
       homedata: { data: { banner: {}, recommend: {} } },
       //这里如果直接写一个空对象会有警告出现：cannot read banner属性从一个undefined
       //猜测原因为homedata数据是created中通过axios获取得到，为异步操作，因此写好结构，虽然数据仍为空，但可不报错
-      recommendTitles: ["sell", "new", "pop"] //该属性是用于设置tabcontrol的标题，标题名称及数量自定义。若修改这里需要同步检查修改created中传入的初始数据和vuex中的recommendData数据及
+      recommendTitles: ["sell", "new", "pop"], //该属性是用于设置tabcontrol的标题，标题名称及数量自定义。若修改这里需要同步检查修改created中传入的初始数据和vuex中的recommendData数据及
       //fortesting: {type:'sell',page:0}
       //这里做了重构 现做一下记录：
       //1.home组件中设置一个默认的属性给recommendData，在created钩子中调用并且用于发送初始化的请求。得到数据后会更新位于vuex中的recommendData.
       //2.在tabcontrol中设置点击事件 点击后切换activeItem并更新显示数据 这里也需要进行检查 如果是初次点击则需要发送请求获取数据，否则不用
+      //scrollY:0,
     };
   },
   // computed:{
@@ -106,10 +107,12 @@ export default {
       }else{
         this.$refs.mytabcontrolbackup.classList.remove("active")
       }
+      //this.scrollY = res.y;
     },
     backTopClick() {
       //console.log('back top clicked');
       this.$refs.myhomescroll.scrollTo(0, 0, 500);
+      this.$refs.myhomescroll.refresh();
     },
     pullUpLoad() {
       let obj = {};
@@ -169,13 +172,37 @@ export default {
       console.log(11111);
       this.$refs.myhomescroll.refresh();
     })
-    // this.$bus.$on('itemclick',(res) => {
-    //   console.log('ready to change annother activeindex');
-    //   console.log('res=' +res);
+    this.$bus.$on('itemclick',(res) => {
+      // console.log('ready to change annother activeindex');
+      // console.log('res=' +res);
       
-    //   this.$refs.mytabcontrolbackup1.$refs.roottabcontrol.activeIndex = res;
-    //   this.$refs.mytabcontrolbackup.activeIndex = res;
-    // })
+      // this.$refs.mytabcontrolbackup1.$refs.roottabcontrol.activeIndex = res;
+      // this.$refs.mytabcontrolbackup.activeIndex = res;
+      //来一个scrollto头部位置，防止即将active的部分高度不足
+      console.log('高度已处理');
+      
+      this.$refs.myhomescroll.scrollTo(0,0,0);
+      // this.scrollY = 0
+      this.$store.commit('changeScrollY',0);
+      this.$refs.myhomescroll.refresh();
+    })
+  },
+  activated(){
+    console.log('activated');
+    console.log('reday scroll to'+this.$store.state.home.scrollY);
+    this.$refs.myhomescroll.refresh();
+    this.$refs.myhomescroll.scrollTo(0,this.$store.state.home.scrollY,0);
+    
+  },
+  deactivated(){
+    console.log('deactivated');
+    console.log(this.$refs.myhomescroll.bScroll.y);
+    this.$store.commit('changeScrollY',this.$refs.myhomescroll.bScroll.y ? this.$refs.myhomescroll.bScroll.y : 0)
+    
+  },
+  destroyed(){
+    console.log('home destoryed');
+    
   }
 };
 </script>
